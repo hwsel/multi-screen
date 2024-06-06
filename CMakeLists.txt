@@ -8,8 +8,16 @@ include(FetchContent)
 find_package(PkgConfig REQUIRED)
 
 set(EP_BASE ${CMAKE_CURRENT_BINARY_DIR}/external)
-set(EP_BUILD_ALWAYS 0L)
-set(EP_J 36)
+
+if(NOT DEFINED EP_BUILD_ALWAYS)
+	set(EP_BUILD_ALWAYS 0L)
+endif(NOT DEFINED EP_BUILD_ALWAYS)
+
+if(NOT DEFINED EP_J)
+	set(EP_J 3)
+endif(NOT DEFINED EP_J)
+
+message("${EP_BUILD_ALWAYS}  ${EP_J}")
 
 set_directory_properties(PROPERTIES EP_BASE "${EP_BASE}")
 
