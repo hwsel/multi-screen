@@ -1,0 +1,81 @@
+cmake_minimum_required(VERSION 3.25)
+project(ffmpeg)
+
+set(CMAKE_CXX_STANDARD 20)
+
+set(EP_BASE @EP_BASE@)
+set(EP_BUILD_ALWAYS @EP_BUILD_ALWAYS@)
+set(EP_J @EP_J@)
+set(INSTALL_PREFIX @EP_BASE@/Install)
+
+# ======== build ffmpeg dep. ========
+configure_file(${CMAKE_SOURCE_DIR}/external/CMakeLists.txt.in ${CMAKE_SOURCE_DIR}/external/CMakeLists.txt @ONLY)
+
+execute_process(
+        COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" . -B ${CMAKE_BINARY_DIR}/ffmpeg-dependencies
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/external
+)
+
+execute_process(
+        COMMAND ${CMAKE_COMMAND} --build .
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/ffmpeg-dependencies
+)
+
+# ======== build ffmpeg ========
+
+include(ExternalProject)
+
+set_directory_properties(PROPERTIES EP_BASE @EP_BASE@)
+
+set(FFMPEG_CONFIG_PKG_CONFIG_FLAGS "--static")
+set(FFMPEG_CONFIG_EXTRA_CFLAGS "-I${CMAKE_SOURCE_DIR}/external/build/include")
+set(FFMPEG_CONFIG_EXTRA_LDFLAGS "-L${CMAKE_SOURCE_DIR}/external/build/lib")
+set(FFMPEG_CONFIG_EXTRA_LIBS "-lpthread -lm")
+set(FFMPEG_CONFIG_LD "g++")
+
+ExternalProject_Add(
+        ffmpeg
+        URL https://ffmpeg.org/releases/ffmpeg-6.1.1.tar.xz
+        #        GIT_REPOSITORY https://git.ffmpeg.org/ffmpeg.git
+        #        GIT_TAG tags/n6.1.1
+        #        GIT_PROGRESS 1
+        SOURCE_DIR ${CMAKE_SOURCE_DIR}/ffmpeg
+        INSTALL_DIR ${INSTALL_PREFIX}
+        CONFIGURE_COMMAND ${CMAKE_COMMAND} -E env PATH=${INSTALL_PREFIX}/bin:$ENV{PATH} PKG_CONFIG_PATH=${INSTALL_PREFIX}/lib/pkgconfig ${CMAKE_SOURCE_DIR}/ffmpeg/configure
+        --prefix=${INSTALL_PREFIX}
+        --pkg-config-flags=${FFMPEG_CONFIG_PKG_CONFIG_FLAGS}
+        --extra-cflags=${FFMPEG_CONFIG_EXTRA_CFLAGS}
+        --extra-ldflags=${FFMPEG_CONFIG_EXTRA_LDFLAGS}
+        --extra-libs=${FFMPEG_CONFIG_EXTRA_LIBS}
+        --ld=${FFMPEG_CONFIG_LD}
+        --bindir=${INSTALL_PREFIX}/bin
+        --enable-gpl
+        --enable-gnutls
+        --enable-libaom
+        --enable-libass
+        --enable-libfdk-aac
+        --enable-libfreetype
+        --enable-libmp3lame
+        --enable-libopus
+        --enable-libsvtav1
+        --enable-libdav1d
+        --enable-libvorbis
+        --enable-libvpx
+        --enable-libx264
+        --enable-libx265
+        --enable-nonfree
+        --enable-libsrt
+        --enable-static
+        BUILD_COMMAND ${CMAKE_COMMAND} -E env PATH=${INSTALL_PREFIX}/bin:$ENV{PATH} make -j @EP_J@
+        BUILD_ALWAYS @EP_BUILD_ALWAYS@
+        BUILD_BYPRODUCTS
+        ${INSTALL_PREFIX}/lib/libavcodec.a
+        ${INSTALL_PREFIX}/lib/libavdevice.a
+        ${INSTALL_PREFIX}/lib/libavfilter.a
+        ${INSTALL_PREFIX}/lib/libavformat.a
+        ${INSTALL_PREFIX}/lib/libavutil.a
+        ${INSTALL_PREFIX}/lib/libpostproc.a
+        ${INSTALL_PREFIX}/lib/libswresample.a
+        ${INSTALL_PREFIX}/lib/libswscale.a
+        INSTALL_COMMAND make install
+)

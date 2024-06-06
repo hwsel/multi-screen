@@ -1,0 +1,30 @@
+cmake_minimum_required(VERSION 3.25)
+project(nasm)
+
+set(CMAKE_CXX_STANDARD 20)
+
+set(EP_BASE @EP_BASE@)
+set(EP_BUILD_ALWAYS @EP_BUILD_ALWAYS@)
+set(EP_J @EP_J@)
+set(INSTALL_PREFIX @EP_BASE@/Install)
+
+include(ExternalProject)
+
+set_directory_properties(PROPERTIES EP_BASE @EP_BASE@)
+
+ExternalProject_Add(
+        nasm
+        URL https://www.nasm.us/pub/nasm/releasebuilds/2.16.01/nasm-2.16.01.tar.bz2
+        SOURCE_DIR ${CMAKE_SOURCE_DIR}/nasm
+        INSTALL_DIR ${INSTALL_PREFIX}
+        CONFIGURE_COMMAND
+        COMMAND ${CMAKE_SOURCE_DIR}/nasm/autogen.sh
+        COMMAND ${CMAKE_COMMAND} -E env PATH=${INSTALL_PREFIX}/bin:$ENV{PATH} ${CMAKE_SOURCE_DIR}/nasm/configure --prefix=${INSTALL_PREFIX}
+        BUILD_COMMAND make -j @EP_J@
+        BUILD_IN_SOURCE 1L
+        BUILD_ALWAYS @EP_BUILD_ALWAYS@
+        INSTALL_COMMAND make install
+)
+
+
+
