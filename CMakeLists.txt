@@ -5,16 +5,23 @@ set(CMAKE_CXX_STANDARD 23)
 
 include(ExternalProject)
 include(FetchContent)
+include(ProcessorCount)
 find_package(PkgConfig REQUIRED)
 
 set(EP_BASE ${CMAKE_CURRENT_BINARY_DIR}/external)
 
 if(NOT DEFINED EP_BUILD_ALWAYS)
-	set(EP_BUILD_ALWAYS 0L)
+	set(EP_BUILD_ALWAYS 1L)
 endif(NOT DEFINED EP_BUILD_ALWAYS)
 
 if(NOT DEFINED EP_J)
-	set(EP_J 3)
+	ProcessorCount(MAX_JOBS)
+	if (MAX_JOBS LESS_EQUAL 4)
+		set(EP_J 3)
+	else ()
+		set(EP_J 36)
+	endif ()
+	
 endif(NOT DEFINED EP_J)
 
 message("${EP_BUILD_ALWAYS}  ${EP_J}")

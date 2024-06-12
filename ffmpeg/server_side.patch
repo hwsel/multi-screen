@@ -1,0 +1,48 @@
+diff --git a/libavcodec/h264_metadata_bsf.c b/libavcodec/h264_metadata_bsf.c
+index 39b9e8eee4..2a0a2cb718 100644
+--- a/libavcodec/h264_metadata_bsf.c
++++ b/libavcodec/h264_metadata_bsf.c
+@@ -20,6 +20,7 @@
+ #include "libavutil/display.h"
+ #include "libavutil/common.h"
+ #include "libavutil/opt.h"
++#include "libavutil/time.h"
+
+ #include "bsf.h"
+ #include "bsf_internal.h"
+@@ -493,6 +494,9 @@ static int h264_metadata_update_fragment(AVBSFContext *bsf, AVPacket *pkt,
+         }
+     }
+
++    // this is the UUID we defined for ts
++    static const uint8_t TS_UUID[] = {0x68, 0x1D, 0x5C, 0x8F, 0x80, 0xCD, 0x48, 0x47, 0x93, 0x0A, 0x99, 0xB9, 0x48, 0x4B, 0x4A, 0x32};
++
+     if (pkt) {
+         // The current packet should be treated as a seek point for metadata
+         // insertion if any of:
+@@ -501,11 +505,25 @@ static int h264_metadata_update_fragment(AVBSFContext *bsf, AVPacket *pkt,
+         // - It is marked as containing a key frame.
+         seek_point = !ctx->done_first_au || has_sps ||
+             (pkt->flags & AV_PKT_FLAG_KEY);
++        seek_point = seek_point || !memcmp(ctx->sei_user_data_payload.uuid_iso_iec_11578, TS_UUID, 16 * sizeof(uint8_t));
+     } else {
+         seek_point = 0;
+     }
+
+     if (ctx->sei_user_data && seek_point) {
++        // TODO: if UUID is ours, put timestamp into payload
++        if (!memcmp(ctx->sei_user_data_payload.uuid_iso_iec_11578, TS_UUID, 16 * sizeof(uint8_t)))
++        {
++            char prefix[] = "timestamp: ";
++            int64_t timestamp = av_gettime();
++            char *payload = malloc(128 * sizeof(char));
++            sprintf(payload, "%s%ld", prefix, timestamp);
++
++//            if (ctx->sei_user_data_payload.data) free(ctx->sei_user_data_payload.data);
++            ctx->sei_user_data_payload.data = (uint8_t *) payload;
++            ctx->sei_user_data_payload.data_length = strlen(payload) + 1;
++        }
++
+         err = ff_cbs_sei_add_message(ctx->common.output, au, 1,
+                                      SEI_TYPE_USER_DATA_UNREGISTERED,
+                                      &ctx->sei_user_data_payload, NULL);

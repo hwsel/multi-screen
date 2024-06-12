@@ -35,12 +35,13 @@ set(FFMPEG_CONFIG_LD "g++")
 
 ExternalProject_Add(
         ffmpeg
-        URL https://ffmpeg.org/releases/ffmpeg-6.1.1.tar.xz
-        #        GIT_REPOSITORY https://git.ffmpeg.org/ffmpeg.git
-        #        GIT_TAG tags/n6.1.1
-        #        GIT_PROGRESS 1
+        #        URL https://ffmpeg.org/releases/ffmpeg-6.1.1.tar.xz
+        GIT_REPOSITORY https://git.ffmpeg.org/ffmpeg.git
+        GIT_TAG tags/n6.1.1
+        GIT_PROGRESS 1
         SOURCE_DIR ${CMAKE_SOURCE_DIR}/ffmpeg
         INSTALL_DIR ${INSTALL_PREFIX}
+        PATCH_COMMAND git apply ${CMAKE_SOURCE_DIR}/server_side.patch
         CONFIGURE_COMMAND ${CMAKE_COMMAND} -E env PATH=${INSTALL_PREFIX}/bin:$ENV{PATH} PKG_CONFIG_PATH=${INSTALL_PREFIX}/lib/pkgconfig ${CMAKE_SOURCE_DIR}/ffmpeg/configure
         --prefix=${INSTALL_PREFIX}
         --pkg-config-flags=${FFMPEG_CONFIG_PKG_CONFIG_FLAGS}
