@@ -372,3 +372,22 @@ pyrightconfig.json
 
 # End of https://www.toptal.com/developers/gitignore/api/c++,cmake,ninja,clion+all,pycharm+all,python
 
+ffmpeg/CMakeLists.txt
+ffmpeg/ffmpeg/
+ffmpeg/external/CMakeLists.txt
+ffmpeg/external/aom/
+ffmpeg/external/aom_build/
+ffmpeg/external/dav1d/
+ffmpeg/external/fdk-aac/
+ffmpeg/external/libvpx/
+ffmpeg/external/opus/
+ffmpeg/external/SVT-AV1/
+ffmpeg/external/vmaf/
+ffmpeg/external/x264/
+ffmpeg/external/x265/
+nasm/CMakeLists.txt
+nasm/nasm/
+nasm/ex-nasm1234/
+nasm/ex-nasm1235/
+spdlog/CMakeLists.txt
+spdlog/spdlog/
