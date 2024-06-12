@@ -22,6 +22,8 @@ flowchart LR
 5. Setup `Server`
 6. Setup `Client`
 
+And you also need `build-essential` and `cmake` > 3.25. 
+
 ### Clone the project
 
 Clone the project on `Server` and all `Client(s)`
