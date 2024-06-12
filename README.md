@@ -9,8 +9,8 @@ flowchart LR
     srt -->|pull| client_b
     server["Server\nUbuntu 22.04"]
     srt["SRT Server\nDocker"]
-    client_a["Client A\nRaspberry Pi OS (64-bit) on Raspberry Pi 4B"]
-    client_b["Client B\nRaspberry Pi OS (64-bit) on Raspberry Pi 4B"]
+    client_a["Client A\nRaspberry Pi OS (64-bit)\non Raspberry Pi 4B"]
+    client_b["Client B\nRaspberry Pi OS (64-bit)\non Raspberry Pi 4B"]
 ```
 
 ## Prepare Project
