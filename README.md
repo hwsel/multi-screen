@@ -147,3 +147,14 @@ or
 ```
  And you can see the outputs on the screen. It's not full-screened, for an easier debugging :(.
  
+or for the baseline
+
+```shell
+./cmake-build-debug/external/Install/bin/ffplay 'srt://10.0.0.106:10080?streamid=#!::r=live/test2,m=request,latency=5000000'
+```
+
+everything will be on console, use `tee` if needed.
+
+```shell
+./cmake-build-debug/external/Install/bin/ffplay 'srt://10.0.0.106:10080?streamid=#!::r=live/test2,m=request,latency=5000000' 2>&1 | tee ffplay.log
+```
