@@ -35,6 +35,8 @@ void display_to_screen()
     SDL_Window *pSDLWindow = SDL_CreateWindow("Demo", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1920 / 2,
                                               1080 / 2, SDL_WINDOW_OPENGL);
 
+    SDL_SetWindowFullscreen(pSDLWindow, SDL_WINDOW_FULLSCREEN_DESKTOP);
+
     SDL_Renderer *pSDLRenderer = SDL_CreateRenderer(pSDLWindow, -1, 0);
     SDL_Texture *pSDLTexture = SDL_CreateTexture(pSDLRenderer, SDL_PIXELFORMAT_IYUV, SDL_TEXTUREACCESS_STREAMING, 1920,
                                                  1080);
