@@ -32,12 +32,20 @@ void display_to_screen()
 
     // TODO: should wait for size
     // TODO: resize, key input
-    SDL_Window *pSDLWindow = SDL_CreateWindow("Demo", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1920 / 2,
-                                              1080 / 2, SDL_WINDOW_OPENGL);
+    // SDL_Window *pSDLWindow = SDL_CreateWindow("Demo", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1920 / 2,
+    //                                           1080 / 2, SDL_WINDOW_OPENGL);
+
+    // SDL_Renderer *pSDLRenderer = SDL_CreateRenderer(pSDLWindow, -1, 0);
+    // SDL_Texture *pSDLTexture = SDL_CreateTexture(pSDLRenderer, SDL_PIXELFORMAT_IYUV, SDL_TEXTUREACCESS_STREAMING, 1920,
+    //                                              1080);
+    // Query the display mode to get the current screen resolution
+    SDL_DisplayMode displayMode;
+    SDL_GetCurrentDisplayMode(0, &displayMode);
+
+    SDL_Window *pSDLWindow = SDL_CreateWindow("Demo", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, displayMode.w, displayMode.h, SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN);
 
     SDL_Renderer *pSDLRenderer = SDL_CreateRenderer(pSDLWindow, -1, 0);
-    SDL_Texture *pSDLTexture = SDL_CreateTexture(pSDLRenderer, SDL_PIXELFORMAT_IYUV, SDL_TEXTUREACCESS_STREAMING, 1920,
-                                                 1080);
+    SDL_Texture *pSDLTexture = SDL_CreateTexture(pSDLRenderer, SDL_PIXELFORMAT_IYUV, SDL_TEXTUREACCESS_STREAMING, 1920, 1080);
 
     AVFrame *pAVFrame;
     AVFrame *pAVFrameHold;
