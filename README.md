@@ -116,17 +116,17 @@ color=c=black:s=3840x1080[main];\
 -map "[mon]" \
 -an -c:v libx264 \
 -bsf:v h264_metadata=sei_user_data=$SEI \
--pes_payload_size 0 -bf 0 \
+-pes_payload_size 0 -bf 0 -g 1 \
 -f mpegts "srt://<SRT IP>:10080?streamid=#!::r=live/test,m=publish" \
 -map "[mon1]" \
 -an -c:v libx264 \
 -bsf:v h264_metadata=sei_user_data=$SEI \
--pes_payload_size 0 -bf 0 \
+-pes_payload_size 0 -bf 0 -g 1 \
 -f mpegts "srt://<SRT IP>:10080?streamid=#!::r=live/test1,m=publish" \
 -map "[mon2]" \
 -an -c:v libx264 \
 -bsf:v h264_metadata=sei_user_data=$SEI \
--pes_payload_size 0 -bf 0 \
+-pes_payload_size 0 -bf 0 -g 1 \
 -f mpegts "srt://<SRT IP>:10080?streamid=#!::r=live/test2,m=publish"
 ```
 
